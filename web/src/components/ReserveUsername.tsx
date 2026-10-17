@@ -44,7 +44,7 @@ export default function ReserveUsername({ dark = false, autoFocus = false }: { d
     e.preventDefault();
     setBusy(true); setError(null);
     try {
-      try { localStorage.setItem('puls:wanted-username', name); } catch { /* private mode */ }
+      try { localStorage.setItem('laud:wanted-username', name); } catch { /* private mode */ }
       const { error: err } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         options: { data: { username: name }, emailRedirectTo: `${SITE_URL}/dashboard?welcome=1` },

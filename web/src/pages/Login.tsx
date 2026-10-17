@@ -80,7 +80,7 @@ export default function Login() {
 
         <p className="small muted">
           {signup ? <>Already have an account? <Link to="/login" style={{ textDecoration: 'underline' }}>Log in</Link></>
-                  : <>New to Puls? <Link to="/login?mode=signup" style={{ textDecoration: 'underline' }}>Claim a username</Link></>}
+                  : <>New to Laud? <Link to="/login?mode=signup" style={{ textDecoration: 'underline' }}>Claim a username</Link></>}
         </p>
       </div>
     </section>

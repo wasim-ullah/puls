@@ -1,9 +1,9 @@
-# Puls — release 1
+# Laud — release 1
 
-Portfolios for marketers. Each person gets **puls.so/@username**, adds their work (images, video, story, results, credits), and shares one link. Jury scoring, verified results and awards are planned for release 2.
+Portfolios for marketers. Each person gets **laud.pro/@username**, adds their work (images, video, story, results, credits), and shares one link. Jury scoring, verified results and awards are planned for release 2.
 
 ```
-puls/
+laud/
 ├── web/        The website (React + Vite). Deploys to Vercel.
 └── supabase/   Database, security rules and file storage. Runs on Supabase.
 ```
@@ -15,15 +15,15 @@ Everything below fits within the free plans of Supabase and Vercel. The only cos
 ## 1. Set up Supabase (about 10 minutes)
 
 1. Create a project at [supabase.com](https://supabase.com). Choose a region near your users; Frankfurt or Mumbai suits the GCC.
-2. Open **SQL Editor** and run these files in order, pasting each one and pressing Run:
+2. Open **SQL Editor**, paste the whole of `supabase/setup.sql` and press **Run** once. It contains everything below in one file. Or run these files in order, pasting each one and pressing Run:
    1. `supabase/migrations/20261017000001_portfolio.sql`
    2. `supabase/migrations/20261017000002_storage.sql`
    3. `supabase/seed.sql` (adds the categories)
 3. Go to **Authentication → URL Configuration**:
-   - **Site URL:** `https://puls.so`
-   - **Redirect URLs:** add `https://puls.so/**`, plus `http://localhost:5173/**` for local development.
-4. **Authentication → Emails → SMTP Settings.** Supabase's built-in email only sends a few messages an hour, which is enough for testing but not for a launch. Connect a free sender such as Resend (3,000 emails a month free): create an account, verify the `puls.so` domain, and paste its SMTP details here.
-5. Optional: **Authentication → Emails → Templates → Magic Link.** Edit the subject to read "Your Puls sign-in link".
+   - **Site URL:** `https://laud.pro`
+   - **Redirect URLs:** add `https://laud.pro/**`, plus `http://localhost:5173/**` for local development.
+4. **Authentication → Emails → SMTP Settings.** Supabase's built-in email only sends a few messages an hour, which is enough for testing but not for a launch. Connect a free sender such as Resend (3,000 emails a month free): create an account, verify the `laud.pro` domain, and paste its SMTP details here.
+5. Optional: **Authentication → Emails → Templates → Magic Link.** Edit the subject to read "Your Laud sign-in link".
 6. Optional: to allow sign-in with Google, enable it under **Authentication → Providers → Google**, then set `VITE_ENABLE_GOOGLE=true` below.
 7. Copy the **Project URL** and **anon public key** from **Project Settings → API**.
 
@@ -49,11 +49,11 @@ npm run dev               # opens on http://localhost:5173
      |---|---|
      | `VITE_SUPABASE_URL` | your Supabase Project URL |
      | `VITE_SUPABASE_ANON_KEY` | your Supabase anon public key |
-     | `VITE_SITE_URL` | `https://puls.so`, or your `….vercel.app` address until the domain is connected |
+     | `VITE_SITE_URL` | `https://laud.pro`, or your `….vercel.app` address until the domain is connected |
      | `VITE_ENABLE_GOOGLE` | `true` only if you turned on Google sign-in |
 4. Click **Deploy**.
-5. Under **Settings → Domains**, add `puls.so` and follow the DNS instructions Vercel shows.
-6. In Supabase, go to **Authentication → URL Configuration** and add your `….vercel.app` address to the Redirect URLs as well (for example `https://puls-xyz.vercel.app/**`).
+5. Under **Settings → Domains**, add `laud.pro` and follow the DNS instructions Vercel shows.
+6. In Supabase, go to **Authentication → URL Configuration** and add your `….vercel.app` address to the Redirect URLs as well (for example `https://laud-xyz.vercel.app/**`).
 
 If you connected Supabase through Vercel's Supabase integration instead, you can skip `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. The site also reads the `SUPABASE_URL` and `SUPABASE_ANON_KEY` variables that the integration adds. It never puts the integration's secret keys (service role, JWT secret, Postgres password) into the website.
 
@@ -61,7 +61,7 @@ These variables are read when the site is built. After changing one, open **Depl
 
 `web/vercel.json` already sends every address to the app, so links like `/@username` work when opened directly.
 
-Vercel's free Hobby plan is for non-commercial use. That's fine while Puls is free. Once you start charging (paid entries, ads or sponsorships), move to Vercel Pro (about $20 a month) or to Cloudflare Pages, which allows commercial use for free.
+Vercel's free Hobby plan is for non-commercial use. That's fine while Laud is free. Once you start charging (paid entries, ads or sponsorships), move to Vercel Pro (about $20 a month) or to Cloudflare Pages, which allows commercial use for free.
 
 ## 4. Make yourself an admin
 
@@ -118,4 +118,4 @@ The owner keeps their work but can't republish it. A moderation screen is planne
 
 ## Release 2 (planned)
 
-Verified results (platform connections or client sign-off), the monthly jury and public votes, scoring, Puls of the Day / Month / Year, a moderation screen, and follows. The database was designed so these can be added as new tables without changing release 1 data.
+Verified results (platform connections or client sign-off), the monthly jury and public votes, scoring, Laud of the Day / Month / Year, a moderation screen, and follows. The database was designed so these can be added as new tables without changing release 1 data.

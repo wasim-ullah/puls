@@ -1,4 +1,4 @@
--- Puls — starting categories. Safe to re-run.
+-- Laud — starting categories. Safe to re-run.
 insert into public.categories (slug, name, sort) values
   ('paid-social',          'Paid Social',           1),
   ('search-performance',   'Search & Performance',  2),

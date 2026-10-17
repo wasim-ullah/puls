@@ -81,11 +81,11 @@ export default function Layout() {
             <Logo />
             <span className="small muted">Portfolios for marketers, with the results behind the work.</span>
           </div>
-          <div className="col"><span className="col-title">Puls</span><Link to="/explore">Explore work</Link><Link to="/how-it-works">How it works</Link><Link to="/login?mode=signup">Claim a username</Link></div>
+          <div className="col"><span className="col-title">Laud</span><Link to="/explore">Explore work</Link><Link to="/how-it-works">How it works</Link><Link to="/login?mode=signup">Claim a username</Link></div>
           <div className="col"><span className="col-title">Your profile</span><Link to="/new">Add work</Link><Link to="/dashboard">My work</Link><Link to="/settings">Settings</Link></div>
           <div className="col"><span className="col-title">Coming next</span><span>Verified results</span><span>Jury scores</span><span>Daily awards</span></div>
         </div>
-        <div className="wrap footer-base"><span>© {new Date().getFullYear()} Puls · Dubai</span><span>Results shown are reported by their owners.</span></div>
+        <div className="wrap footer-base"><span>© {new Date().getFullYear()} Laud · Dubai</span><span>Results shown are reported by their owners.</span></div>
       </footer>
     </>
   );

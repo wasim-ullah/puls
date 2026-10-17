@@ -15,7 +15,7 @@ function ProfilePreview() {
   ];
   return (
     <div className="hero-preview" aria-hidden="true">
-      <span className="url">puls.so/@aisha</span>
+      <span className="url">laud.pro/@aisha</span>
       <div className="row gap-12" style={{ alignItems: 'center' }}>
         <span className="avatar" style={{ width: 52, height: 52, background: '#3A3935', color: '#F4F4F1' }}>AR</span>
         <div>
@@ -72,7 +72,7 @@ export default function Home() {
           </div>
           <div className="steps">
             {[
-              ['01', 'Claim your username', 'Get a short link like puls.so/@yourname to use on LinkedIn, your CV and your email signature.'],
+              ['01', 'Claim your username', 'Get a short link like laud.pro/@yourname to use on LinkedIn, your CV and your email signature.'],
               ['02', 'Add your work', 'Upload the creative, write the brief, insight and idea, and add the results that moved.'],
               ['03', 'Share one link', 'Recruiters and clients see your best work and your numbers in one place.'],
             ].map(([n, h, p]) => (
@@ -90,7 +90,7 @@ export default function Home() {
         <div className="section-head" style={{ alignItems: 'flex-end' }}>
           <div>
             <h2 className="h-md">Latest work</h2>
-            <p className="muted small" style={{ marginTop: 4 }}>Fresh from marketers on Puls</p>
+            <p className="muted small" style={{ marginTop: 4 }}>Fresh from marketers on Laud</p>
           </div>
           <Link to="/explore" className="btn btn-outline-ink">Explore all work</Link>
         </div>

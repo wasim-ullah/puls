@@ -48,7 +48,7 @@ export default function Settings() {
   useEffect(() => {
     if (!profile || loaded) return;
     let wanted = params.get('username') || '';
-    if (!wanted && !profile.username) { try { wanted = localStorage.getItem('puls:wanted-username') || ''; } catch { /* ignore */ } }
+    if (!wanted && !profile.username) { try { wanted = localStorage.getItem('laud:wanted-username') || ''; } catch { /* ignore */ } }
     setUsername(profile.username || wanted);
     setDisplayName(profile.display_name);
     setHeadline(profile.headline);
@@ -108,7 +108,7 @@ export default function Settings() {
       setError(err.code === '23505' ? 'Someone just took that username. Try another one.' : errorMessage(err));
       return;
     }
-    try { localStorage.removeItem('puls:wanted-username'); } catch { /* ignore */ }
+    try { localStorage.removeItem('laud:wanted-username'); } catch { /* ignore */ }
     await refreshProfile();
     if (firstTime) navigate('/dashboard?welcome=1');
     else toast.show('Profile saved');
@@ -139,7 +139,7 @@ export default function Settings() {
             {(status === 'available' || status === 'yours') && <CheckIcon />}{statusText}
           </span>
           {!firstTime && profile.username && name !== profile.username && status === 'available' && (
-            <div className="notice notice-warn small">Changing your username breaks links you've already shared to puls.so/@{profile.username}.</div>
+            <div className="notice notice-warn small">Changing your username breaks links you've already shared to laud.pro/@{profile.username}.</div>
           )}
         </div>
 

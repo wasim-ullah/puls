@@ -5,20 +5,20 @@ import { publicUrl } from '../lib/media';
 import { initials } from '../lib/util';
 import type { WorkCard as WorkCardData } from '../lib/types';
 
-export function PulseIcon({ size = 16, color = 'var(--accent)' }: { size?: number; color?: string }) {
+/** Laud mark: a four-point spark, the "star" of praise. */
+export function LaudIcon({ size = 16, color = 'var(--accent)' }: { size?: number; color?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.6"
-      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M2 13h5l2.5-6 4 11 2.5-5H22" />
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2.5c.5 4.6 2.9 7 9.5 9.5-6.6 2.5-9 4.9-9.5 9.5-.5-4.6-2.9-7-9.5-9.5 6.6-2.5 9-4.9 9.5-9.5z" fill={color} />
     </svg>
   );
 }
 
 export function Logo() {
   return (
-    <Link to="/" className="logo" aria-label="Puls home">
-      <span className="logo-mark"><PulseIcon /></span>
-      Puls
+    <Link to="/" className="logo" aria-label="Laud home">
+      <span className="logo-mark"><LaudIcon /></span>
+      Laud
     </Link>
   );
 }

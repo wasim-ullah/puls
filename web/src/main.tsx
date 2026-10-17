@@ -16,7 +16,7 @@ import Settings from './pages/Settings';
 import WorkPage from './pages/WorkPage';
 import './styles.css';
 
-/** puls.so/@name → profile. puls.so/name (no @) redirects to the @ form. */
+/** laud.pro/@name → profile. laud.pro/name (no @) redirects to the @ form. */
 function HandleRoute() {
   const { handle = '' } = useParams();
   if (handle.startsWith('@')) return <Profile />;

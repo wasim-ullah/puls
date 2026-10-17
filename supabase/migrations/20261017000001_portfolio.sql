@@ -1,4 +1,4 @@
--- Puls — release 1: portfolio profiles at puls.so/@username.
+-- Laud — release 1: portfolio profiles at laud.pro/@username.
 -- Tables: profiles, categories, works (+ assets, results, credits).
 -- Release 2 (verification, jury, awards) will add tables alongside these.
 
@@ -11,7 +11,7 @@ create table public.reserved_usernames (name citext primary key);
 insert into public.reserved_usernames (name) values
   ('admin'),('api'),('about'),('account'),('auth'),('awards'),('blog'),('careers'),('dashboard'),
   ('directory'),('edit'),('explore'),('help'),('jury'),('judge'),('leaderboard'),('login'),('logout'),
-  ('me'),('methodology'),('new'),('nominees'),('null'),('privacy'),('pricing'),('puls'),('root'),
+  ('me'),('methodology'),('new'),('nominees'),('null'),('privacy'),('pricing'),('laud'),('puls'),('root'),
   ('settings'),('signin'),('signup'),('static'),('submit'),('support'),('system'),('terms'),
   ('undefined'),('winners'),('work'),('www');
 
@@ -90,9 +90,9 @@ exception when unique_violation then
   return new;
 end $$;
 
--- Named for Puls so it can live alongside other apps' sign-up triggers in a shared project.
-drop trigger if exists puls_on_auth_user_created on auth.users;
-create trigger puls_on_auth_user_created after insert on auth.users
+-- Named for Laud so it can live alongside other apps' sign-up triggers in a shared project.
+drop trigger if exists laud_on_auth_user_created on auth.users;
+create trigger laud_on_auth_user_created after insert on auth.users
   for each row execute function public.handle_new_user();
 
 create or replace function public.is_admin() returns boolean
@@ -111,7 +111,7 @@ create table public.categories (
 );
 
 -- ─────────────────────────────────────────────────────────────
--- Works (portfolio items) — puls.so/@username/<slug>
+-- Works (portfolio items) — laud.pro/@username/<slug>
 -- ─────────────────────────────────────────────────────────────
 create type public.work_status as enum ('draft', 'published', 'hidden');
 

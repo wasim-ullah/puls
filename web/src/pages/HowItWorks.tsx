@@ -3,7 +3,7 @@ import ReserveUsername from '../components/ReserveUsername';
 import { useTitle } from '../lib/util';
 
 const NOW = [
-  ['Your own link', 'puls.so/@yourname, one address for LinkedIn, your CV and your email signature.'],
+  ['Your own link', 'laud.pro/@yourname, one address for LinkedIn, your CV and your email signature.'],
   ['Work pages', 'Every piece gets its own page with images, video, the story behind it, results and credits.'],
   ['Results up front', 'Your strongest number shows on every card, so people see the impact before they click.'],
   ['Explore', 'Browse work by category and search by brand, agency or title.'],
@@ -12,7 +12,7 @@ const NOW = [
 const NEXT = [
   ['Verified results', 'Connect the ad or analytics account, or have the client sign off, and your numbers get a Verified badge.'],
   ['Jury scores', 'Working marketers score entries on idea, craft, strategy and results, and every vote is public.'],
-  ['Daily awards', 'Puls of the Day, Month and Year, decided on results as well as craft.'],
+  ['Daily awards', 'Laud of the Day, Month and Year, decided on results as well as craft.'],
 ];
 
 export default function HowItWorks() {
@@ -23,7 +23,7 @@ export default function HowItWorks() {
         <div className="section-head">
           <h1 className="display h-xl" style={{ flex: '1 1 640px' }}>A portfolio that shows what your work achieved.</h1>
           <p className="muted" style={{ flex: '0 1 400px', fontSize: 16 }}>
-            Design portfolios show how work looks. Marketing work also needs to show what it did, and Puls puts that first.
+            Design portfolios show how work looks. Marketing work also needs to show what it did, and Laud puts that first.
           </p>
         </div>
       </section>

@@ -37,7 +37,7 @@ export function initials(name: string, fallback = '?'): string {
 
 export function useTitle(title: string) {
   useEffect(() => {
-    document.title = title ? `${title} · Puls` : 'Puls — Portfolios for marketers';
+    document.title = title ? `${title} · Laud` : 'Laud — Portfolios for marketers';
   }, [title]);
 }
 

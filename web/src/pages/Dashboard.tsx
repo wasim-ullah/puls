@@ -80,7 +80,7 @@ export default function Dashboard() {
     <section className="wrap" style={{ paddingTop: 48, paddingBottom: 120 }}>
       {params.get('welcome') && (
         <div className="notice row gap-12 between" style={{ marginBottom: 24, background: 'var(--ink)', color: '#fff', borderColor: 'var(--ink)' }}>
-          <span>Welcome to Puls. <b>{SITE_HOST}/@{profile.username}</b> is yours.</span>
+          <span>Welcome to Laud. <b>{SITE_HOST}/@{profile.username}</b> is yours.</span>
           <Link to="/new" className="btn btn-sm btn-light">Add your first piece</Link>
         </div>
       )}

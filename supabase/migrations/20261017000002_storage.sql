@@ -1,4 +1,4 @@
--- Puls — file storage (public buckets; files live under <user id>/...).
+-- Laud — file storage (public buckets; files live under <user id>/...).
 -- work-media: covers and gallery images for portfolio work
 -- avatars:    profile photos
 

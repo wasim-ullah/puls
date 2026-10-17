@@ -68,7 +68,7 @@ export default function Explore() {
       <section className="wrap" style={{ paddingTop: 56, paddingBottom: 24 }}>
         <div className="section-head" style={{ marginBottom: 28 }}>
           <h1 className="display h-xl">Explore</h1>
-          <p className="muted" style={{ flex: '0 1 420px', fontSize: 16 }}>Campaigns, launches and growth work from marketers on Puls, newest first.</p>
+          <p className="muted" style={{ flex: '0 1 420px', fontSize: 16 }}>Campaigns, launches and growth work from marketers on Laud, newest first.</p>
         </div>
         <div className="row gap-12 between" style={{ padding: '12px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
           <div className="row gap-8" role="group" aria-label="Category">
