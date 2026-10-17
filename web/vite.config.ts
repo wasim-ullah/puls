@@ -11,11 +11,14 @@ export default defineConfig(({ mode }) => {
     env.VITE_SUPABASE_ANON_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY ||
     env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || '';
 
+  const siteUrl = env.VITE_SITE_URL || env.SITE_URL || '';
+
   return {
     plugins: [react()],
     define: {
       'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(url),
       'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(anonKey),
+      'import.meta.env.VITE_SITE_URL': JSON.stringify(siteUrl),
     },
     build: {
       rollupOptions: {
