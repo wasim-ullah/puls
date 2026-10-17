@@ -70,7 +70,7 @@ export default function Layout() {
       {!isConfigured && (
         <div className="wrap" style={{ paddingTop: 16 }}>
           <div className="notice notice-warn">
-            <b>Setup needed:</b> this build has no Supabase connection. Add <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> to your hosting environment variables (or a local <code>.env</code> file), then redeploy.
+            <b>Setup needed:</b> this build has no Supabase connection. Add <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> to your hosting environment variables (or a local <code>.env</code> file), then redeploy. Build {__BUILD_TIME__}.
           </div>
         </div>
       )}

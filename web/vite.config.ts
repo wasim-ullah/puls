@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(url),
       'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(anonKey),
       'import.meta.env.VITE_SITE_URL': JSON.stringify(siteUrl),
+      __BUILD_TIME__: JSON.stringify(new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC'),
     },
     build: {
       rollupOptions: {
