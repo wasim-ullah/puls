@@ -90,7 +90,9 @@ exception when unique_violation then
   return new;
 end $$;
 
-create trigger on_auth_user_created after insert on auth.users
+-- Named for Puls so it can live alongside other apps' sign-up triggers in a shared project.
+drop trigger if exists puls_on_auth_user_created on auth.users;
+create trigger puls_on_auth_user_created after insert on auth.users
   for each row execute function public.handle_new_user();
 
 create or replace function public.is_admin() returns boolean
