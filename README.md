@@ -55,6 +55,8 @@ npm run dev               # opens on http://localhost:5173
 5. Under **Settings → Domains**, add `puls.so` and follow the DNS instructions Vercel shows.
 6. In Supabase, go to **Authentication → URL Configuration** and add your `….vercel.app` address to the Redirect URLs as well (for example `https://puls-xyz.vercel.app/**`).
 
+If you connected Supabase through Vercel's Supabase integration instead, you can skip `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. The site also reads the `SUPABASE_URL` and `SUPABASE_ANON_KEY` variables that the integration adds. It never puts the integration's secret keys (service role, JWT secret, Postgres password) into the website.
+
 These variables are read when the site is built. After changing one, open **Deployments**, click the three dots on the latest deployment and choose **Redeploy**.
 
 `web/vercel.json` already sends every address to the app, so links like `/@username` work when opened directly.

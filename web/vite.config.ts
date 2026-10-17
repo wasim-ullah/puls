@@ -1,16 +1,31 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig({
-  plugins: [react()],
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ['react', 'react-dom', 'react-router-dom'],
-          supabase: ['@supabase/supabase-js'],
+// Vercel's Supabase integration adds SUPABASE_URL / SUPABASE_ANON_KEY (and NEXT_PUBLIC_* copies)
+// instead of VITE_* names. Pick up those two public values only. Never expose the service-role
+// key or JWT secret, which the integration also adds.
+export default defineConfig(({ mode }) => {
+  const env = { ...loadEnv(mode, process.cwd(), ''), ...process.env } as Record<string, string | undefined>;
+  const url = env.VITE_SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL || env.SUPABASE_URL || '';
+  const anonKey =
+    env.VITE_SUPABASE_ANON_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY ||
+    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || '';
+
+  return {
+    plugins: [react()],
+    define: {
+      'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(url),
+      'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(anonKey),
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            react: ['react', 'react-dom', 'react-router-dom'],
+            supabase: ['@supabase/supabase-js'],
+          },
         },
       },
     },
-  },
+  };
 });
