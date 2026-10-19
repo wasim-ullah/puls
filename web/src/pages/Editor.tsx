@@ -9,6 +9,7 @@ import type { Category, Work, WorkAsset, WorkCredit, WorkResult, WorkStatus } fr
 import { errorMessage, slugify, splitList, useTitle, videoEmbed } from '../lib/util';
 import NotFound from './NotFound';
 import CoverMaker from '../components/CoverMaker';
+import { makeCoverFile, type CoverStyle } from '../lib/coverGen';
 
 const MAX_GALLERY = 12;
 const thisYear = new Date().getFullYear();
@@ -18,11 +19,13 @@ interface Form {
   category_id: string; markets: string; year: string; summary: string;
   challenge: string; approach: string; outcome: string;
   cover_path: string; video_url: string; link_url: string;
+  cover_style: CoverStyle; cover_color: string;
 }
 
 const EMPTY: Form = {
   title: '', slug: '', brand: '', agency: '', my_role: '', category_id: '', markets: '', year: '',
   summary: '', challenge: '', approach: '', outcome: '', cover_path: '', video_url: '', link_url: '',
+  cover_style: 'stat', cover_color: '#111111',
 };
 
 function fromWork(w: Work): Form {
@@ -31,6 +34,7 @@ function fromWork(w: Work): Form {
     category_id: w.category_id ? String(w.category_id) : '', markets: w.markets.join(', '),
     year: w.year ? String(w.year) : '', summary: w.summary, challenge: w.challenge, approach: w.approach,
     outcome: w.outcome, cover_path: w.cover_path, video_url: w.video_url, link_url: w.link_url,
+    cover_style: (w.cover_style as CoverStyle) || 'stat', cover_color: w.cover_color || '#111111',
   };
 }
 
@@ -72,7 +76,7 @@ export default function Editor() {
   const [status, setStatus] = useState<WorkStatus>('draft');
   const [assets, setAssets] = useState<WorkAsset[]>([]);
   const [results, setResults] = useState<WorkResult[]>([]);
-  const [makingCover, setMakingCover] = useState(false);
+  const headline = results.find((r) => r.value.trim() && r.metric.trim());
   const [credits, setCredits] = useState<WorkCredit[]>([]);
   const [cats, setCats] = useState<Category[]>([]);
   const [state, setState] = useState<'loading' | 'ready' | 'missing'>(isNew ? 'ready' : 'loading');
@@ -134,18 +138,6 @@ export default function Editor() {
     });
   };
 
-  async function addCover(files: File[]) {
-    const file = files[0];
-    if (!file) return;
-    setUploading('cover'); setError(null);
-    try {
-      const path = await uploadImage(file, 'work-media', session!.user.id);
-      if (form.cover_path && form.cover_path !== original.current.cover) removed.current.push(form.cover_path);
-      set('cover_path', path);
-      setMakingCover(false);
-    } catch (e) { setError(errorMessage(e)); } finally { setUploading(null); }
-  }
-
   async function addGallery(files: File[]) {
     const room = MAX_GALLERY - assets.length;
     if (room <= 0) { setError(`Up to ${MAX_GALLERY} gallery images.`); return; }
@@ -182,22 +174,34 @@ export default function Editor() {
     const title = form.title.trim();
     const slug = slugify(form.slug || title);
     if (title.length < 2) { setError('Give your work a title.'); return; }
-    if (nextStatus === 'published' && !form.cover_path) { setError('Add a cover image before publishing.'); return; }
     if (form.video_url && !videoEmbed(form.video_url)) { setError('Video links must be YouTube or Vimeo.'); return; }
     const year = form.year ? Number(form.year) : null;
     if (year !== null && (!Number.isInteger(year) || year < 1990 || year > thisYear + 1)) { setError(`Year should be between 1990 and ${thisYear + 1}.`); return; }
     const link = form.link_url.trim() && !/^https?:\/\//i.test(form.link_url.trim()) ? `https://${form.link_url.trim()}` : form.link_url.trim();
+
+    // Every save redraws the cover from the current title and headline result.
+    let coverPath = form.cover_path;
+    setSaving(true);
+    try {
+      const file = await makeCoverFile({
+        title, brand: form.brand.trim(), value: headline?.value.trim() ?? '', metric: headline?.metric.trim() ?? '',
+        category: cats.find((c) => String(c.id) === String(form.category_id))?.name ?? '',
+        style: form.cover_style, color: form.cover_color,
+      });
+      coverPath = await uploadImage(file, 'work-media', session!.user.id);
+      if (form.cover_path) removed.current.push(form.cover_path);
+    } catch (err) { setSaving(false); setError(errorMessage(err)); return; }
 
     const payload = {
       title: title.slice(0, 120), slug, brand: form.brand.trim().slice(0, 80), agency: form.agency.trim().slice(0, 80),
       my_role: form.my_role.trim().slice(0, 80), category_id: form.category_id ? Number(form.category_id) : null,
       markets: splitList(form.markets).slice(0, 10).map((m) => m.slice(0, 40)), year,
       summary: form.summary.trim().slice(0, 280), challenge: form.challenge.trim(), approach: form.approach.trim(),
-      outcome: form.outcome.trim(), cover_path: form.cover_path, video_url: form.video_url.trim(), link_url: link,
+      outcome: form.outcome.trim(), cover_path: coverPath, video_url: form.video_url.trim(), link_url: link,
       status: status === 'hidden' ? 'hidden' as const : nextStatus,
+      cover_style: form.cover_style, cover_color: form.cover_color,
     };
 
-    setSaving(true);
     try {
       let workId = id;
       if (isNew) {
@@ -231,7 +235,7 @@ export default function Editor() {
       if (c.length) await supabase.from('work_credits').insert(c).throwOnError();
 
       // Clean up files that were replaced or removed.
-      const stillUsed = new Set([form.cover_path, ...assets.map((x) => x.path)]);
+      const stillUsed = new Set([coverPath, ...assets.map((x) => x.path)]);
       const gone = [
         ...removed.current,
         ...(original.current.cover && !stillUsed.has(original.current.cover) ? [original.current.cover] : []),
@@ -239,7 +243,8 @@ export default function Editor() {
       ].filter((p) => !stillUsed.has(p));
       if (gone.length) await removeFiles('work-media', [...new Set(gone)]);
       removed.current = [];
-      original.current = { cover: form.cover_path, assets: assets.map((x) => x.path) };
+      set('cover_path', coverPath);
+      original.current = { cover: coverPath, assets: assets.map((x) => x.path) };
 
       setDirty(false);
       setStatus(payload.status);
@@ -258,7 +263,6 @@ export default function Editor() {
     }
   }
 
-  const coverUrl = publicUrl('work-media', form.cover_path);
   const needsUsername = !profile.username;
 
   return (
@@ -270,7 +274,7 @@ export default function Editor() {
             <h1 className="display" style={{ fontSize: 'clamp(38px, 4.6vw, 64px)' }}>{isNew ? 'Add work' : form.title || 'Edit work'}</h1>
           </div>
           <p className="muted" style={{ flex: '0 1 420px' }}>
-            Show the work as it ran and the story behind it. Only the title and a cover image are required to publish.
+            Show the work as it ran and the story behind it. Only a title is required to publish. Laud makes the cover for you.
           </p>
         </div>
       </section>
@@ -317,36 +321,13 @@ export default function Editor() {
             <fieldset className="panel" style={{ margin: 0 }}>
               <legend className="eyebrow" style={{ padding: '0 8px', marginLeft: -8 }}>02 · Visuals</legend>
               <div className="stack gap-8">
-                <span className="field" style={{ gap: 2 }}>Cover image <span className="hint">Used on cards and as the main image. 4:3 works best.</span></span>
-                {makingCover ? (
-                  <CoverMaker
-                    title={form.title} brand={form.brand}
-                    category={cats.find((c) => String(c.id) === String(form.category_id))?.name ?? ''}
-                    value={results.find((r) => r.value.trim())?.value ?? ''}
-                    metric={results.find((r) => r.value.trim())?.metric ?? ''}
-                    busy={uploading === 'cover'} onUse={(f) => void addCover([f])} onCancel={() => setMakingCover(false)} />
-                ) : form.cover_path ? (
-                  <div className="row gap-16" style={{ alignItems: 'flex-end' }}>
-                    <div className="cover-preview" style={{ flex: '1 1 300px' }}><img src={coverUrl} alt="Cover preview" /></div>
-                    <div className="stack gap-8">
-                      <label className="btn btn-outline" style={{ position: 'relative', overflow: 'hidden' }}>
-                        {uploading === 'cover' ? 'Uploading…' : 'Replace cover'}
-                        <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" disabled={Boolean(uploading)}
-                          onChange={(e) => { void addCover(Array.from(e.target.files ?? [])); e.target.value = ''; }}
-                          style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
-                      </label>
-                      <button type="button" className="btn btn-outline btn-sm" onClick={() => setMakingCover(true)}>Make a cover instead</button>
-                      <button type="button" className="btn btn-ghost btn-sm" onClick={() => { if (form.cover_path !== original.current.cover) removed.current.push(form.cover_path); set('cover_path', ''); }}>Remove</button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <Dropzone label={uploading === 'cover' ? 'Uploading…' : 'Drop your cover image'} hint="JPG, PNG, WebP or GIF · large photos are resized automatically" disabled={Boolean(uploading)} onFiles={addCover} />
-                    <button type="button" className="btn btn-outline btn-sm" style={{ alignSelf: 'flex-start' }} onClick={() => setMakingCover(true)}>
-                      No image? Make a cover from your title and results
-                    </button>
-                  </>
-                )}
+                <span className="field" style={{ gap: 2 }}>Cover <span className="hint">Made automatically from your title and first result, so every cover on Laud matches. Pick a style and colour.</span></span>
+                <CoverMaker
+                  title={form.title} brand={form.brand}
+                  category={cats.find((c) => String(c.id) === String(form.category_id))?.name ?? ''}
+                  value={headline?.value ?? ''} metric={headline?.metric ?? ''}
+                  style={form.cover_style} color={form.cover_color}
+                  onChange={(n) => { set('cover_style', n.style); set('cover_color', n.color); }} />
               </div>
 
               <div className="stack gap-8">

@@ -166,3 +166,11 @@ export function coverToFile(canvas: HTMLCanvasElement): Promise<File> {
     }, 'image/webp', 0.9);
   });
 }
+
+/** Draws the cover off-screen and returns it as an image file ready to upload. */
+export async function makeCoverFile(input: CoverInput): Promise<File> {
+  await loadCoverFonts();
+  const canvas = document.createElement('canvas');
+  drawCover(canvas, input);
+  return coverToFile(canvas);
+}

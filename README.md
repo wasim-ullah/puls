@@ -110,7 +110,7 @@ The owner keeps their work but can't republish it. A moderation screen is planne
 - Drafts, and their images and results, are invisible to everyone else.
 - Nobody can make themselves an admin.
 - Uploads can only go into the uploader's own folder.
-- A title, a cover image and a username are required before anything is published.
+- A title and a username are required before anything is published. Covers are drawn automatically from the title and headline result, so every card matches.
 - Video links only embed from YouTube and Vimeo.
 - Words like `settings`, `explore` and `admin` can't be taken as usernames.
 

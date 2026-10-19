@@ -42,6 +42,8 @@ export interface Work {
   approach: string;
   outcome: string;
   cover_path: string;
+  cover_style?: string;
+  cover_color?: string;
   video_url: string;
   link_url: string;
   status: WorkStatus;
