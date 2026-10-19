@@ -65,7 +65,7 @@ Vercel's free Hobby plan is for non-commercial use. That's fine while Laud is fr
 
 ## Sample profiles (optional)
 
-To fill the site before launch, run `supabase/samples.sql` in the Supabase SQL Editor. It adds 8 fictional marketers and agencies with 14 pieces of work. Each one is labelled "Sample" on its card, profile and work page, and none of them can log in. Cover images are in `web/public/samples/`.
+To fill the site before launch, run `supabase/samples.sql` in the Supabase SQL Editor. It adds 8 fictional marketers and agencies with 14 pieces of work. Run `supabase/samples_more.sql` after it for 20 more profiles (24 more pieces). Each one is labelled "Sample" on its card, profile and work page, and none of them can log in. Cover images are in `web/public/samples/`.
 
 When real members arrive, run `supabase/samples_remove.sql` to delete every sample profile and its work. Real accounts are not touched.
 
@@ -78,7 +78,7 @@ update public.profiles set role = 'admin'
 where id = (select id from auth.users where email = 'you@example.com');
 ```
 
-As an admin you can hide work that breaks the rules. For now this is done in SQL:
+As an admin you get an **Admin** link in your account menu (laud.pro/admin). There you can give a blue verified tick to people you have checked, and hide or restore work. Sample profiles can never be verified. The same can be done in SQL:
 
 ```sql
 update public.works set status = 'hidden' where id = '…';     -- hide

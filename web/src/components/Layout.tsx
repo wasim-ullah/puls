@@ -30,6 +30,7 @@ function AccountMenu() {
         <div role="menu" style={{ position: 'absolute', right: 0, top: 52, minWidth: 220, background: '#fff', border: '1px solid var(--line)', borderRadius: 16, padding: 8, boxShadow: '0 16px 40px rgba(0,0,0,.12)', display: 'flex', flexDirection: 'column' }}>
           {profile?.username && <Link role="menuitem" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }} to={`/@${profile.username}`}>View my profile</Link>}
           <Link role="menuitem" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }} to="/dashboard">My work</Link>
+          {profile?.role === 'admin' && <Link role="menuitem" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }} to="/admin">Admin</Link>}
           <Link role="menuitem" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }} to="/settings">Profile settings</Link>
           <button role="menuitem" type="button" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }}
             onClick={async () => { await signOut(); navigate('/'); }}>Sign out</button>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Avatar, Loader, WorkCard, useToast } from '../components/ui';
+import { Avatar, Loader, VerifiedTick, WorkCard, useToast } from '../components/ui';
 import { getProfileByUsername, getProfileWorks, getWorkBySlug, type FullWork } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { publicUrl } from '../lib/media';
@@ -102,7 +102,7 @@ export default function WorkPage() {
             {work.summary && <p style={{ fontSize: 18, color: 'var(--ink-2)', maxWidth: 680 }}>{work.summary}</p>}
             <Link to={`/@${owner.username}`} className="row gap-12" style={{ alignSelf: 'flex-start', marginTop: 4 }}>
               <Avatar url={owner.avatar_url} name={ownerName} size={40} />
-              <span><span style={{ display: 'block', fontWeight: 600 }}>{ownerName}</span><span className="small muted">{owner.headline || `@${owner.username}`}</span></span>
+              <span><span style={{ display: 'block', fontWeight: 600 }}>{ownerName}{owner.is_verified && <> <VerifiedTick size={15} /></>}</span><span className="small muted">{owner.headline || `@${owner.username}`}</span></span>
             </Link>
           </div>
           <div className="row gap-8">

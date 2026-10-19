@@ -4,6 +4,7 @@ import { Navigate, RouterProvider, createBrowserRouter, useParams } from 'react-
 import Layout from './components/Layout';
 import { RequireAuth } from './components/ui';
 import { AuthProvider } from './lib/auth';
+import Admin from './pages/Admin';
 import Dashboard from './pages/Dashboard';
 import Editor from './pages/Editor';
 import Explore from './pages/Explore';
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       { path: '/login', element: <Login /> },
       { path: '/dashboard', element: <RequireAuth><Dashboard /></RequireAuth> },
       { path: '/settings', element: <RequireAuth><Settings /></RequireAuth> },
+      { path: '/admin', element: <RequireAuth><Admin /></RequireAuth> },
       { path: '/new', element: <RequireAuth><Editor key="new" /></RequireAuth> },
       { path: '/edit/:id', element: <RequireAuth><Editor /></RequireAuth> },
       { path: '/:handle', element: <HandleRoute /> },

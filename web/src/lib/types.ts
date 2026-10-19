@@ -16,6 +16,7 @@ export interface Profile {
   available_for_work: boolean;
   role: 'member' | 'admin';
   is_sample?: boolean;
+  is_verified?: boolean;
   created_at: string;
 }
 
@@ -80,6 +81,7 @@ export interface WorkCard {
   headline_value: string | null;
   headline_metric: string | null;
   is_sample?: boolean;
+  is_verified?: boolean;
 }
 
 export type UsernameStatus = 'available' | 'taken' | 'reserved' | 'invalid';

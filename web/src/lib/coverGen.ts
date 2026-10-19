@@ -109,8 +109,10 @@ export function drawCover(canvas: HTMLCanvasElement, input: CoverInput) {
     const top = 200 + size * 0.78;
     ctx.fillText(value, PAD - 8, top);
     ctx.font = `600 64px ${SANS}`; spaced(ctx, 64);
-    lines(ctx, metric, W - PAD * 2, 2).forEach((l, i) => ctx.fillText(l, PAD, top + 110 + i * 70));
-    ctx.fillStyle = accent; ctx.fillRect(PAD, top + 30, 120, 10);
+    // Leave room for descenders such as the comma in "1,900".
+    const barY = top + Math.max(30, size * 0.2);
+    lines(ctx, metric, W - PAD * 2, 2).forEach((l, i) => ctx.fillText(l, PAD, barY + 84 + i * 70));
+    ctx.fillStyle = accent; ctx.fillRect(PAD, barY, 120, 10);
   }
 
   if (style === 'headline') {

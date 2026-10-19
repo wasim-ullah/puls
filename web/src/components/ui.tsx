@@ -23,6 +23,16 @@ export function Logo() {
   );
 }
 
+export function VerifiedTick({ size = 18 }: { size?: number }) {
+  return (
+    <svg className="verified-tick" width={size} height={size} viewBox="0 0 24 24" role="img" aria-label="Verified by Laud">
+      <title>Verified by Laud</title>
+      <path fill="#1D9BF0" d="M22.5 12.5c0-1.58-.88-2.95-2.18-3.65.15-.44.23-.91.23-1.4 0-2.2-1.7-3.99-3.8-3.99-.47 0-.92.08-1.33.25C14.82 2.42 13.5 1.5 12 1.5s-2.82.92-3.42 2.21c-.41-.17-.86-.25-1.33-.25-2.1 0-3.8 1.79-3.8 3.99 0 .49.08.96.23 1.4C2.38 9.55 1.5 10.92 1.5 12.5c0 1.5.8 2.8 1.98 3.53-.03.2-.04.4-.04.6 0 2.21 1.7 4 3.8 4 .47 0 .92-.09 1.33-.25.6 1.29 1.92 2.21 3.43 2.21s2.83-.92 3.43-2.21c.41.16.86.25 1.33.25 2.1 0 3.8-1.79 3.8-4 0-.2-.01-.4-.04-.6 1.18-.73 1.98-2.03 1.98-3.53z"/>
+      <path fill="#fff" d="M10.5 16.2l-3.6-3.6 1.4-1.4 2.2 2.2 5.2-5.2 1.4 1.4z"/>
+    </svg>
+  );
+}
+
 export function Avatar({ url, name, size = 44 }: { url?: string; name: string; size?: number }) {
   const src = url ? publicUrl('avatars', url) : '';
   return (
@@ -51,7 +61,7 @@ export function WorkCard({ w, showOwner = true, tag }: { w: WorkCardData; showOw
       <div className="work-meta">
         <div style={{ minWidth: 0 }}>
           <div className="work-title">{w.title}</div>
-          <div className="work-sub">{sub}</div>
+          <div className="work-sub">{showOwner && w.is_verified && <VerifiedTick size={13} />} {sub}</div>
         </div>
         {w.headline_value && (
           <div className="work-figure">

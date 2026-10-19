@@ -142,6 +142,7 @@ p { margin: 0; }
 .work-card:hover .work-thumb img { transform: scale(1.02); }
 .work-card:hover { opacity: 1; }
 .thumb-tag { position: absolute; top: 14px; left: 14px; height: 26px; padding: 0 10px; border-radius: 999px; background: rgba(255,255,255,.9); display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; }
+.verified-tick { display: inline-block; vertical-align: -0.12em; flex: none; }
 .sample-tag { left: auto; right: 14px; background: #FFF1E8; color: var(--accent-ink); }
 .thumb-empty { width: 100%; height: 100%; display: flex; align-items: flex-end; padding: 20px; font-size: 22px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; color: var(--ink-2); }
 .work-meta { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Avatar, Loader, WorkCard, useToast } from '../components/ui';
+import { Avatar, Loader, VerifiedTick, WorkCard, useToast } from '../components/ui';
 import { getProfileByUsername, getProfileWorks } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { SITE_HOST, SITE_URL } from '../lib/supabase';
@@ -64,7 +64,7 @@ export default function Profile() {
                 {profile.available_for_work && <span className="pill pill-line"><span className="dot" style={{ background: 'var(--good)' }} />Available for work</span>}
                 {profile.kind !== 'person' && <span className="pill pill-dark">{KIND_LABEL[profile.kind]}</span>}
               </div>
-              <h1 className="display" style={{ fontSize: 'clamp(38px, 4.6vw, 64px)' }}>{name}</h1>
+              <h1 className="display" style={{ fontSize: 'clamp(38px, 4.6vw, 64px)' }}>{name}{profile.is_verified && <> <VerifiedTick size={36} /></>}</h1>
               {(profile.headline || profile.location) && (
                 <p style={{ fontSize: 16, color: 'var(--ink-2)' }}>{[profile.headline, profile.location].filter(Boolean).join(' · ')}</p>
               )}
