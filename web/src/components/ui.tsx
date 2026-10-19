@@ -46,6 +46,7 @@ export function WorkCard({ w, showOwner = true, tag }: { w: WorkCardData; showOw
       <div className="work-thumb">
         {cover ? <img src={cover} alt="" loading="lazy" /> : <div className="thumb-empty">{w.title}</div>}
         {(tag || w.category_name) && <span className="thumb-tag">{tag || w.category_name}</span>}
+        {w.is_sample && <span className="thumb-tag sample-tag">Sample</span>}
       </div>
       <div className="work-meta">
         <div style={{ minWidth: 0 }}>

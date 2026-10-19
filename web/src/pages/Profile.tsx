@@ -60,6 +60,7 @@ export default function Profile() {
             <Avatar url={profile.avatar_url} name={name} size={120} />
             <div className="stack gap-8" style={{ flex: '1 1 340px', minWidth: 0 }}>
               <div className="row gap-8">
+                {profile.is_sample && <span className="pill pill-draft" title="A fictional profile that shows how Laud works">Sample profile</span>}
                 {profile.available_for_work && <span className="pill pill-line"><span className="dot" style={{ background: 'var(--good)' }} />Available for work</span>}
                 {profile.kind !== 'person' && <span className="pill pill-dark">{KIND_LABEL[profile.kind]}</span>}
               </div>

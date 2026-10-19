@@ -90,6 +90,11 @@ export default function WorkPage() {
         <nav aria-label="Breadcrumb" className="eyebrow" style={{ marginBottom: 20 }}>
           <Link to={`/@${owner.username}`}>@{owner.username}</Link> / {work.title}
         </nav>
+        {owner.is_sample && (
+          <div className="notice" style={{ marginBottom: 24 }}>
+            <b>Sample work.</b> This is a fictional example that shows what a Laud work page looks like. The person, brand and results are made up.
+          </div>
+        )}
         <div className="row gap-32 between" style={{ alignItems: 'flex-end' }}>
           <div className="stack gap-16" style={{ flex: '1 1 640px' }}>
             {category && <span className="pill pill-line" style={{ alignSelf: 'flex-start' }}>{category.name}</span>}

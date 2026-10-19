@@ -4,7 +4,7 @@ export type Bucket = 'work-media' | 'avatars';
 
 export function publicUrl(bucket: Bucket, path: string): string {
   if (!path) return '';
-  if (/^https?:\/\//.test(path)) return path;
+  if (/^https?:\/\//.test(path) || path.startsWith('/')) return path;
   return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
 }
 

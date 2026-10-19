@@ -63,6 +63,12 @@ These variables are read when the site is built. After changing one, open **Depl
 
 Vercel's free Hobby plan is for non-commercial use. That's fine while Laud is free. Once you start charging (paid entries, ads or sponsorships), move to Vercel Pro (about $20 a month) or to Cloudflare Pages, which allows commercial use for free.
 
+## Sample profiles (optional)
+
+To fill the site before launch, run `supabase/samples.sql` in the Supabase SQL Editor. It adds 8 fictional marketers and agencies with 14 pieces of work. Each one is labelled "Sample" on its card, profile and work page, and none of them can log in. Cover images are in `web/public/samples/`.
+
+When real members arrive, run `supabase/samples_remove.sql` to delete every sample profile and its work. Real accounts are not touched.
+
 ## 4. Make yourself an admin
 
 After you sign up on the live site, run this in the Supabase SQL Editor, replacing the email with yours:

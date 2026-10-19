@@ -15,6 +15,7 @@ export interface Profile {
   skills: string[];
   available_for_work: boolean;
   role: 'member' | 'admin';
+  is_sample?: boolean;
   created_at: string;
 }
 
@@ -76,6 +77,7 @@ export interface WorkCard {
   avatar_url: string;
   headline_value: string | null;
   headline_metric: string | null;
+  is_sample?: boolean;
 }
 
 export type UsernameStatus = 'available' | 'taken' | 'reserved' | 'invalid';
