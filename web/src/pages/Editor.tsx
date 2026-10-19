@@ -8,6 +8,7 @@ import { SITE_HOST, supabase } from '../lib/supabase';
 import type { Category, Work, WorkAsset, WorkCredit, WorkResult, WorkStatus } from '../lib/types';
 import { errorMessage, slugify, splitList, useTitle, videoEmbed } from '../lib/util';
 import NotFound from './NotFound';
+import CoverMaker from '../components/CoverMaker';
 
 const MAX_GALLERY = 12;
 const thisYear = new Date().getFullYear();
@@ -71,6 +72,7 @@ export default function Editor() {
   const [status, setStatus] = useState<WorkStatus>('draft');
   const [assets, setAssets] = useState<WorkAsset[]>([]);
   const [results, setResults] = useState<WorkResult[]>([]);
+  const [makingCover, setMakingCover] = useState(false);
   const [credits, setCredits] = useState<WorkCredit[]>([]);
   const [cats, setCats] = useState<Category[]>([]);
   const [state, setState] = useState<'loading' | 'ready' | 'missing'>(isNew ? 'ready' : 'loading');
@@ -140,6 +142,7 @@ export default function Editor() {
       const path = await uploadImage(file, 'work-media', session!.user.id);
       if (form.cover_path && form.cover_path !== original.current.cover) removed.current.push(form.cover_path);
       set('cover_path', path);
+      setMakingCover(false);
     } catch (e) { setError(errorMessage(e)); } finally { setUploading(null); }
   }
 
@@ -315,7 +318,14 @@ export default function Editor() {
               <legend className="eyebrow" style={{ padding: '0 8px', marginLeft: -8 }}>02 · Visuals</legend>
               <div className="stack gap-8">
                 <span className="field" style={{ gap: 2 }}>Cover image <span className="hint">Used on cards and as the main image. 4:3 works best.</span></span>
-                {form.cover_path ? (
+                {makingCover ? (
+                  <CoverMaker
+                    title={form.title} brand={form.brand}
+                    category={cats.find((c) => String(c.id) === String(form.category_id))?.name ?? ''}
+                    value={results.find((r) => r.value.trim())?.value ?? ''}
+                    metric={results.find((r) => r.value.trim())?.metric ?? ''}
+                    busy={uploading === 'cover'} onUse={(f) => void addCover([f])} onCancel={() => setMakingCover(false)} />
+                ) : form.cover_path ? (
                   <div className="row gap-16" style={{ alignItems: 'flex-end' }}>
                     <div className="cover-preview" style={{ flex: '1 1 300px' }}><img src={coverUrl} alt="Cover preview" /></div>
                     <div className="stack gap-8">
@@ -325,11 +335,17 @@ export default function Editor() {
                           onChange={(e) => { void addCover(Array.from(e.target.files ?? [])); e.target.value = ''; }}
                           style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
                       </label>
+                      <button type="button" className="btn btn-outline btn-sm" onClick={() => setMakingCover(true)}>Make a cover instead</button>
                       <button type="button" className="btn btn-ghost btn-sm" onClick={() => { if (form.cover_path !== original.current.cover) removed.current.push(form.cover_path); set('cover_path', ''); }}>Remove</button>
                     </div>
                   </div>
                 ) : (
-                  <Dropzone label={uploading === 'cover' ? 'Uploading…' : 'Drop your cover image'} hint="JPG, PNG, WebP or GIF · large photos are resized automatically" disabled={Boolean(uploading)} onFiles={addCover} />
+                  <>
+                    <Dropzone label={uploading === 'cover' ? 'Uploading…' : 'Drop your cover image'} hint="JPG, PNG, WebP or GIF · large photos are resized automatically" disabled={Boolean(uploading)} onFiles={addCover} />
+                    <button type="button" className="btn btn-outline btn-sm" style={{ alignSelf: 'flex-start' }} onClick={() => setMakingCover(true)}>
+                      No image? Make a cover from your title and results
+                    </button>
+                  </>
                 )}
               </div>
 
