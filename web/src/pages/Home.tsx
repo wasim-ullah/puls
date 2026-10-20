@@ -54,9 +54,9 @@ export default function Home() {
         <div className="split" style={{ gap: 56, alignItems: 'stretch' }}>
           <div className="split-main stack gap-24" style={{ justifyContent: 'center' }}>
             <span className="pill pill-line" style={{ alignSelf: 'flex-start' }}><span className="dot" />Early access · usernames open</span>
-            <h1 className="display h-xl">Your marketing work, and <span className="grey">what it actually</span> achieved.</h1>
+            <h1 className="display h-xl">The marketing portfolio <span className="grey">that gets you</span> hired.</h1>
             <p style={{ fontSize: 18, color: 'var(--ink-2)', maxWidth: 560 }}>
-              A portfolio built for marketers. Show campaigns with the numbers behind them, all on one link you own.
+              Show your campaigns and the results behind them on one link you own. Free for marketers.
             </p>
             <div style={{ maxWidth: 560 }}><ReserveUsername /></div>
           </div>
