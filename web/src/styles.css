@@ -279,7 +279,7 @@ dl { margin: 0; }
 
 /* Jobs */
 .job-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
-.job-row { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.job-row { color: inherit; text-decoration: none; transition: background .15s ease; display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid var(--line); }
 .job-logo { width: 52px; height: 52px; border-radius: 14px; background: #fff; border: 1px solid var(--line); display: inline-flex; align-items: center; justify-content: center; overflow: hidden; font-weight: 600; font-size: 14px; color: var(--ink-2); flex: none; }
 .job-logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
 .job-title { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin: 0; }
@@ -288,3 +288,17 @@ dl { margin: 0; }
 @media (max-width: 640px) { .job-side { align-items: flex-start; text-align: left; width: 100%; } }
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+.job-row:hover .job-title { text-decoration: underline; text-underline-offset: 3px; }
+.job-more { font-size: 13px; font-weight: 600; margin-top: 6px; }
+.job-page { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+.job-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.job-facts dt { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.job-facts dd { margin: 4px 0 0; font-weight: 600; }
+.job-description { font-size: 16px; line-height: 1.65; color: var(--ink-2); overflow-wrap: anywhere; }
+.job-description h3 { font-size: 19px; color: var(--ink); margin: 28px 0 8px; letter-spacing: -0.02em; }
+.job-description p { margin: 0 0 14px; }
+.job-description ul, .job-description ol { margin: 0 0 16px; padding-left: 22px; }
+.job-description li { margin-bottom: 6px; }
+.job-description blockquote { margin: 0 0 16px; padding-left: 14px; border-left: 3px solid var(--line-2); }
+.job-apply { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; padding-top: 28px; border-top: 1px solid var(--line); }

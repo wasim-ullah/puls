@@ -1,28 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Loader } from '../components/ui';
+import { loadJobs, postedAgo, type Job, type JobFeed } from '../lib/jobs';
 import { initials, useTitle } from '../lib/util';
 
-interface Job {
-  id: string; title: string; company: string; logo: string; location: string; type: string;
-  salary: string; posted: string | null; excerpt: string; url: string; source: string; sourceUrl: string;
-}
-interface Feed { updated: string; sources: { name: string; url: string; ok: boolean }[]; jobs: Job[] }
-
-function ago(iso: string | null): string {
-  if (!iso) return '';
-  const days = Math.floor((Date.now() - Date.parse(iso)) / 86_400_000);
-  if (Number.isNaN(days)) return '';
-  if (days <= 0) return 'Today';
-  if (days === 1) return 'Yesterday';
-  if (days < 30) return `${days} days ago`;
-  const months = Math.floor(days / 30);
-  return months === 1 ? '1 month ago' : `${months} months ago`;
-}
-
-function Logo({ job }: { job: Job }) {
+export function JobLogo({ job, size = 52 }: { job: Job; size?: number }) {
   const [broken, setBroken] = useState(false);
   return (
-    <span className="job-logo">
+    <span className="job-logo" style={{ width: size, height: size }}>
       {job.logo && !broken ? <img src={job.logo} alt="" loading="lazy" onError={() => setBroken(true)} /> : initials(job.company)}
     </span>
   );
@@ -30,17 +15,12 @@ function Logo({ job }: { job: Job }) {
 
 export default function Jobs() {
   useTitle('Remote marketing jobs');
-  const [feed, setFeed] = useState<Feed | null>(null);
+  const [feed, setFeed] = useState<JobFeed | null>(null);
   const [failed, setFailed] = useState(false);
   const [q, setQ] = useState('');
   const [type, setType] = useState('');
 
-  useEffect(() => {
-    fetch('/api/jobs')
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-      .then((d: Feed) => setFeed(d))
-      .catch(() => setFailed(true));
-  }, []);
+  useEffect(() => { loadJobs().then(setFeed).catch(() => setFailed(true)); }, []);
 
   const types = useMemo(() => [...new Set((feed?.jobs ?? []).map((j) => j.type.toLowerCase()).filter(Boolean))].sort(), [feed]);
   const shown = useMemo(() => {
@@ -58,7 +38,7 @@ export default function Jobs() {
             <span className="eyebrow">Jobs</span>
             <h1 className="display" style={{ fontSize: 'clamp(38px, 4.6vw, 64px)' }}>Remote marketing jobs</h1>
             <p className="muted" style={{ fontSize: 16, maxWidth: 560 }}>
-              Fresh remote roles in marketing, updated through the day. Apply on the original job board.
+              Fresh remote roles in marketing, updated through the day. Open a job to read the full description.
             </p>
           </div>
           <p className="small muted" style={{ flex: '0 1 320px' }}>
@@ -84,19 +64,19 @@ export default function Jobs() {
         ) : (
           <div className="job-list">
             {shown.map((j) => (
-              <article key={j.id} className="job-row">
-                <Logo job={j} />
+              <Link key={j.id} to={`/jobs/${j.id}`} className="job-row">
+                <JobLogo job={j} />
                 <div className="stack gap-4" style={{ flex: '1 1 320px', minWidth: 0 }}>
                   <h2 className="job-title">{j.title}</h2>
                   <div className="small muted">{[j.company, j.location, j.type].filter(Boolean).join(' · ')}</div>
                   {j.salary && <div className="small" style={{ fontWeight: 600 }}>{j.salary}</div>}
                   {j.excerpt && <p className="small muted job-excerpt">{j.excerpt}</p>}
                 </div>
-                <div className="stack gap-8 job-side">
-                  <a className="btn btn-primary btn-sm" href={j.url} target="_blank" rel="noopener nofollow">Apply on {j.source} ↗</a>
-                  <span className="small muted">{ago(j.posted)}{ago(j.posted) ? ' · ' : ''}via <a href={j.sourceUrl} target="_blank" rel="noopener" style={{ textDecoration: 'underline' }}>{j.source}</a></span>
+                <div className="stack gap-4 job-side">
+                  <span className="small muted">{[postedAgo(j.posted), `via ${j.source}`].filter(Boolean).join(' · ')}</span>
+                  <span className="job-more">View job →</span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         )}

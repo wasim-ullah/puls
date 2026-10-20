@@ -1,0 +1,17 @@
+import { chromium } from 'playwright';
+import fs from 'node:fs';
+const b=await chromium.launch(); const p=await b.newPage({viewport:{width:1300,height:1000}});
+const errs=[]; p.on('pageerror',e=>errs.push(e.message)); const log=console.log;
+await p.route('**/api/jobs', r=>r.fulfill({status:200, contentType:'application/json', body:fs.readFileSync('feed.json','utf8')}));
+await p.goto('http://localhost:4173/jobs'); await p.getByText('Performance Marketing Manager').waitFor();
+log(((await p.getByRole('link',{name:/Apply on/}).count())===0?'PASS':'FAIL')+' no apply buttons on list');
+await p.screenshot({path:'jobs-list2.png'});
+await p.getByText('Performance Marketing Manager').click();
+await p.waitForURL(/\/jobs\/h/); await p.getByText('What you will do').waitFor(); log('PASS description on laud page');
+const apply=p.getByRole('link',{name:'Apply on Himalayas ↗'}); log('apply count '+await apply.count()+' href '+await apply.getAttribute('href'));
+const box=await apply.boundingBox(); const desc=await p.locator('.job-description').boundingBox(); log((box.y>desc.y+desc.height?'PASS':'FAIL')+' apply below description');
+log('xss flag: '+await p.evaluate(()=>window.__xss));
+await p.screenshot({path:'job-page.png',fullPage:true});
+await p.goto('http://localhost:4173/jobs/doesnotexist'); await p.getByText('This job is no longer listed').waitFor(); log('PASS missing job message');
+await p.goto('http://localhost:4173/jobs/r1'); await p.getByRole('link',{name:/Apply on Remotive/}).waitFor(); log('PASS direct link to job works');
+log('errors '+JSON.stringify(errs)); await b.close();

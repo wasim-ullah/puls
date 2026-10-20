@@ -8,6 +8,8 @@
 //   from the API, cache, and drop expired jobs.
 // - Neither: jobs are shown openly, never behind a sign-up, and are not passed on to other boards.
 
+import { createHash } from 'node:crypto';
+
 const REMOTIVE = 'https://remotive.com/api/remote-jobs?category=marketing&limit=60';
 const HIMALAYAS = 'https://himalayas.app/jobs/api/search?q=marketing&sort=recent';
 
@@ -15,6 +17,35 @@ const strip = (html = '') =>
   String(html).replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&')
     .replace(/&#39;|&rsquo;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim();
 const clip = (s, n) => (s.length > n ? `${s.slice(0, n - 1).trimEnd()}…` : s);
+const ALLOWED = new Set(['p', 'br', 'ul', 'ol', 'li', 'strong', 'b', 'em', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote']);
+const HEADINGS = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+
+/**
+ * Turns a third-party job description into safe, simple HTML.
+ * Only a short list of formatting tags survives, every attribute is dropped, links become
+ * plain text, and anything else that looks like markup is escaped, so nothing can run.
+ */
+export function cleanHtml(html = '') {
+  const kept = [];
+  let s = String(html)
+    .replace(/\u0000/g, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<(script|style|iframe|object|embed|svg|math|template|noscript|form)[^>]*>[\s\S]*?<\/\1\s*>/gi, '')
+    .replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^<>]*>/g, (tag, name) => {
+      const n = name.toLowerCase();
+      if (!ALLOWED.has(n)) return n === 'div' || n === 'section' ? ' ' : '';
+      const close = tag.startsWith('</');
+      const out = HEADINGS.has(n) ? (close ? '</h3>' : '<h3>') : n === 'br' ? '<br>' : `<${close ? '/' : ''}${n === 'b' ? 'strong' : n === 'i' ? 'em' : n}>`;
+      kept.push(out);
+      return `\u0000${kept.length - 1}\u0000`;
+    });
+  s = s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  s = s.replace(/\u0000(\d+)\u0000/g, (_, i) => kept[Number(i)]);
+  s = s.replace(/(<p>\s*(&nbsp;|\s)*<\/p>\s*)+/g, '').trim();
+  return s.length > 40000 ? s.slice(0, 40000) : s;
+}
+
+const shortId = (s) => createHash('sha1').update(String(s)).digest('hex').slice(0, 12);
 const httpsOnly = (u) => (typeof u === 'string' && /^https:\/\//i.test(u) ? u : '');
 
 async function getJson(url) {
@@ -29,7 +60,7 @@ async function getJson(url) {
 
 export function fromRemotive(data) {
   return (data?.jobs ?? []).map((j) => ({
-    id: `remotive-${j.id}`,
+    id: `r${String(j.id).replace(/\D/g, '') || shortId(j.url)}`,
     title: strip(j.title),
     company: strip(j.company_name),
     logo: httpsOnly(j.company_logo),
@@ -38,6 +69,7 @@ export function fromRemotive(data) {
     salary: strip(j.salary),
     posted: j.publication_date || null,
     excerpt: clip(strip(j.description), 220),
+    description: cleanHtml(j.description),
     url: httpsOnly(j.url),
     source: 'Remotive',
     sourceUrl: 'https://remotive.com',
@@ -52,7 +84,7 @@ export function fromHimalayas(data, now = Date.now()) {
       const loc = Array.isArray(j.locationRestrictions) && j.locationRestrictions.length ? j.locationRestrictions.join(', ') : 'Worldwide';
       const pay = j.minSalary && j.maxSalary ? `${j.currency || ''} ${Number(j.minSalary).toLocaleString('en')}–${Number(j.maxSalary).toLocaleString('en')}${j.salaryPeriod ? ` / ${j.salaryPeriod}` : ''}`.trim() : '';
       return {
-        id: `himalayas-${j.guid || j.applicationLink}`,
+        id: `h${shortId(j.guid || j.applicationLink)}`,
         title: strip(j.title),
         company: strip(j.companyName),
         logo: httpsOnly(j.companyLogo),
@@ -61,6 +93,7 @@ export function fromHimalayas(data, now = Date.now()) {
         salary: pay,
         posted: j.pubDate ? new Date(typeof j.pubDate === 'number' ? j.pubDate * 1000 : j.pubDate).toISOString() : null,
         excerpt: clip(strip(j.excerpt || j.description), 220),
+        description: cleanHtml(j.description || j.excerpt),
         url: httpsOnly(j.applicationLink),
         source: 'Himalayas',
         sourceUrl: httpsOnly(j.guid) || 'https://himalayas.app',
