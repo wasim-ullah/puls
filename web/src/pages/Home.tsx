@@ -9,7 +9,7 @@ import { useTitle } from '../lib/util';
 function HeroPhoto() {
   return (
     <div className="hero-photo">
-      <img src="/hero-photo.jpg" alt="A marketer smiling in a bright office" width={1600} height={1066} />
+      <img src="/hero-photo.jpg?v=2" alt="Portrait of a marketer" width={933} height={1400} />
     </div>
   );
 }
