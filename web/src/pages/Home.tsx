@@ -15,11 +15,11 @@ function ProfilePreview() {
   ];
   return (
     <div className="hero-preview" aria-hidden="true">
-      <span className="url">laud.pro/@aisha</span>
+      <span className="url">laud.pro/@marcus</span>
       <div className="row gap-12" style={{ alignItems: 'center' }}>
-        <span className="avatar" style={{ width: 52, height: 52, background: '#3A3935', color: '#F4F4F1' }}>AR</span>
+        <span className="avatar" style={{ width: 52, height: 52, background: '#3A3935' }}><img src="/preview-avatar.jpg" alt="" width={52} height={52} /></span>
         <div>
-          <div style={{ fontWeight: 600, fontSize: 20, letterSpacing: '-0.02em' }}>Aisha Rahman</div>
+          <div style={{ fontWeight: 600, fontSize: 20, letterSpacing: '-0.02em' }}>Marcus Bello</div>
           <div style={{ fontSize: 13, color: '#A3A39C' }}>Performance marketer · Riyadh</div>
         </div>
       </div>
