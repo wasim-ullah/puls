@@ -16,9 +16,13 @@ try {
   await p.goto(last('zara@example.com')); await p.getByRole('heading', { name: 'My work' }).waitFor({ timeout: 10000 });
   await p.goto(BASE + '/new');
   await p.getByLabel('Title').fill('Cutting cost per sale for a telecom launch');
+  await p.getByLabel('Markets').fill('UAE, Oman, Qatar, Bahrain'); await p.getByLabel('Year').fill('2023');
+  await p.locator('fieldset').first().screenshot({ path: 'editor-off.png' });
   await p.getByLabel('Brand / client').fill('Etisalat');
-  await p.getByText('Keep the client confidential.').click();
-  await p.getByLabel(/Describe the client/).fill('A GCC telecom brand');
+  await p.getByText("Hide the client's name").click();
+  await p.getByLabel('Show the client as').fill('A GCC telecom brand');
+  await p.locator('fieldset').first().screenshot({ path: 'editor-on.png' });
+  await p.setViewportSize({ width: 390, height: 900 }); await p.locator('fieldset').first().screenshot({ path: 'editor-mobile.png' }); await p.setViewportSize({ width: 1300, height: 900 });
   await p.getByRole('button', { name: '+ Add a result' }).click(); await p.getByLabel('Figure').fill('-38%'); await p.getByLabel('Metric').fill('Cost per sale');
   await p.getByRole('button', { name: 'Publish' }).click(); await p.waitForURL(/\/@zara\//, { timeout: 15000 });
   const html = await p.content(); log(html.includes('Etisalat') ? 'FAIL name shown publicly' : 'PASS name not on work page');

@@ -318,26 +318,31 @@ export default function Editor() {
                     <input value={form.slug} onChange={(e) => { setSlugTouched(true); set('slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')); }} maxLength={80} placeholder="souq-night-drop" />
                   </span>
                 </label>
-                <label className="field">{form.client_hidden ? <>Client name <span className="hint">Private. Only you can see it.</span></> : 'Brand / client'}
-                  <input className="input" value={form.brand} onChange={(e) => set('brand', e.target.value)} maxLength={80} placeholder="Dune Coffee Co." /></label>
-                <label className="row gap-8 small" style={{ alignItems: 'flex-start', gridColumn: '1 / -1', cursor: 'pointer' }}>
-                  <input type="checkbox" checked={form.client_hidden} onChange={(e) => set('client_hidden', e.target.checked)} style={{ marginTop: 3 }} />
-                  <span><b>Keep the client confidential.</b> Show your results without the client's name. Visitors see your description instead, and the name is never published.</span>
-                </label>
-                {form.client_hidden && (
-                  <label className="field" style={{ gridColumn: '1 / -1' }}>Describe the client <span className="hint">Shown instead of the name. Keep it general enough that the client can't be identified.</span>
-                    <input className="input" value={form.client_descriptor} onChange={(e) => set('client_descriptor', e.target.value)} maxLength={80} placeholder="A GCC telecom brand" /></label>
-                )}
-                <label className="field">Agency or team<input className="input" value={form.agency} onChange={(e) => set('agency', e.target.value)} maxLength={80} placeholder="Northlane Studio, or In-house" /></label>
-                <label className="field">Your role<input className="input" value={form.my_role} onChange={(e) => set('my_role', e.target.value)} maxLength={80} placeholder="Performance lead" /></label>
-                <label className="field">Category
-                  <select className="select" value={form.category_id} onChange={(e) => set('category_id', e.target.value)}>
-                    <option value="">Choose a category</option>
-                    {cats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                  </select>
-                </label>
-                <label className="field">Markets <span className="hint">Comma separated</span><input className="input" value={form.markets} onChange={(e) => set('markets', e.target.value)} placeholder="UAE, KSA" /></label>
-                <label className="field">Year<input className="input" inputMode="numeric" value={form.year} onChange={(e) => set('year', e.target.value.replace(/\D/g, '').slice(0, 4))} placeholder={String(thisYear)} /></label>
+                <div className="grid-3 full">
+                  <label className="field">{form.client_hidden ? 'Client name (private)' : 'Brand / client'}
+                    <input className="input" value={form.brand} onChange={(e) => set('brand', e.target.value)} maxLength={80} placeholder="Dune Coffee Co." /></label>
+                  <div className="field">Confidential client
+                    <label className="toggle-box">
+                      <input type="checkbox" checked={form.client_hidden} onChange={(e) => set('client_hidden', e.target.checked)} />
+                      <span>Hide the client's name</span>
+                    </label>
+                  </div>
+                  <label className={`field${form.client_hidden ? '' : ' field-off'}`}>Show the client as
+                    <input className="input" value={form.client_descriptor} disabled={!form.client_hidden} onChange={(e) => set('client_descriptor', e.target.value)} maxLength={80} placeholder={form.client_hidden ? 'A GCC telecom brand' : 'Tick to hide the name'} /></label>
+                  {form.client_hidden && (
+                    <p className="small muted full">Visitors see your description, never the name. Keep it general enough that the client can't be identified.</p>
+                  )}
+                  <label className="field">Agency or team<input className="input" value={form.agency} onChange={(e) => set('agency', e.target.value)} maxLength={80} placeholder="Northlane Studio, or In-house" /></label>
+                  <label className="field">Your role<input className="input" value={form.my_role} onChange={(e) => set('my_role', e.target.value)} maxLength={80} placeholder="Performance lead" /></label>
+                  <label className="field">Category
+                    <select className="select" value={form.category_id} onChange={(e) => set('category_id', e.target.value)}>
+                      <option value="">Choose a category</option>
+                      {cats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                  </label>
+                  <label className="field span-2">Markets<input className="input" value={form.markets} onChange={(e) => set('markets', e.target.value)} placeholder="UAE, KSA, Qatar" /></label>
+                  <label className="field">Year<input className="input" inputMode="numeric" value={form.year} onChange={(e) => set('year', e.target.value.replace(/\D/g, '').slice(0, 4))} placeholder={String(thisYear)} /></label>
+                </div>
                 <label className="field full"><span className="row">Summary <span className="hint" style={{ marginLeft: 6 }}>Shown on cards and at the top of the page</span><Count value={form.summary} max={280} /></span>
                   <textarea className="textarea" rows={2} value={form.summary} onChange={(e) => set('summary', e.target.value)} maxLength={280} placeholder="A coffee that only existed after dark, sold through thirty Instagram drops." />
                 </label>
