@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Editor from './pages/Editor';
 import Explore from './pages/Explore';
 import Home from './pages/Home';
+import Jobs from './pages/Jobs';
 import HowItWorks from './pages/HowItWorks';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/', element: <Home /> },
       { path: '/explore', element: <Explore /> },
+      { path: '/jobs', element: <Jobs /> },
       { path: '/how-it-works', element: <HowItWorks /> },
       { path: '/login', element: <Login /> },
       { path: '/dashboard', element: <RequireAuth><Dashboard /></RequireAuth> },

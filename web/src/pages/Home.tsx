@@ -6,33 +6,10 @@ import { supabase } from '../lib/supabase';
 import type { Category, WorkCard as WorkCardData } from '../lib/types';
 import { useTitle } from '../lib/util';
 
-function ProfilePreview() {
-  // Illustration of what a profile looks like. Not live data.
-  const tiles = [
-    { bg: '#C7B596', fg: '#231A10', tag: 'PAID SOCIAL', line: 'Batch 07 drops in 20 minutes.' },
-    { bg: '#F7FBFC', fg: '#0F2A36', tag: 'LANDING PAGE', line: 'The hotter it gets, the less you pay.' },
-    { bg: '#E2683A', fg: '#FFFFFF', tag: 'EMAIL & CRM', line: 'Your rate is better this week.' },
-  ];
+function HeroPhoto() {
   return (
-    <div className="hero-preview" aria-hidden="true">
-      <span className="url">laud.pro/@marcus</span>
-      <div className="row gap-12" style={{ alignItems: 'center' }}>
-        <span className="avatar" style={{ width: 52, height: 52, background: '#3A3935' }}><img src="/preview-avatar.jpg" alt="" width={52} height={52} /></span>
-        <div>
-          <div style={{ fontWeight: 600, fontSize: 20, letterSpacing: '-0.02em' }}>Marcus Bello</div>
-          <div style={{ fontSize: 13, color: '#A3A39C' }}>Performance marketer · Riyadh</div>
-        </div>
-      </div>
-      <div className="row gap-24" style={{ borderTop: '1px solid #2E2D2A', paddingTop: 14 }}>
-        {[['WORK', '9'], ['BRANDS', '6'], ['TOP RESULT', '−52% CPL']].map(([k, v]) => (
-          <div key={k}><div className="mono" style={{ fontSize: 10, color: '#9A9A93' }}>{k}</div><div style={{ fontSize: 20, fontWeight: 600, letterSpacing: '-0.03em' }}>{v}</div></div>
-        ))}
-      </div>
-      <div className="preview-tiles">
-        {tiles.map((t) => (
-          <div key={t.tag} style={{ background: t.bg, color: t.fg }}><small>{t.tag}</small>{t.line}</div>
-        ))}
-      </div>
+    <div className="hero-photo">
+      <img src="/hero-photo.jpg" alt="A marketer smiling in a bright office" width={1600} height={1066} />
     </div>
   );
 }
@@ -60,7 +37,7 @@ export default function Home() {
             </p>
             <div style={{ maxWidth: 560 }}><ReserveUsername /></div>
           </div>
-          <div style={{ flex: '1 1 380px', minWidth: 0 }}><ProfilePreview /></div>
+          <div style={{ flex: '1 1 380px', minWidth: 0 }}><HeroPhoto /></div>
         </div>
       </section>
 

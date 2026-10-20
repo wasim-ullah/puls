@@ -50,6 +50,7 @@ export default function Layout() {
             <Logo />
             <nav aria-label="Main">
               <NavLink to="/explore">Explore</NavLink>
+              <NavLink to="/jobs">Jobs</NavLink>
               <NavLink to="/how-it-works">How it works</NavLink>
             </nav>
           </div>
@@ -82,7 +83,7 @@ export default function Layout() {
             <Logo />
             <span className="small muted">Portfolios for marketers, with the results behind the work.</span>
           </div>
-          <div className="col"><span className="col-title">Laud</span><Link to="/explore">Explore work</Link><Link to="/how-it-works">How it works</Link><Link to="/login?mode=signup">Claim a username</Link></div>
+          <div className="col"><span className="col-title">Laud</span><Link to="/explore">Explore work</Link><Link to="/jobs">Remote jobs</Link><Link to="/how-it-works">How it works</Link><Link to="/login?mode=signup">Claim a username</Link></div>
           <div className="col"><span className="col-title">Your profile</span><Link to="/new">Add work</Link><Link to="/dashboard">My work</Link><Link to="/settings">Settings</Link></div>
           <div className="col"><span className="col-title">Coming next</span><span>Verified results</span><span>Jury scores</span><span>Daily awards</span></div>
           <div className="col"><span className="col-title">Contact</span><a href="mailto:team@laud.pro">team@laud.pro</a></div>

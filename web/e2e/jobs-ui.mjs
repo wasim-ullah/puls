@@ -1,0 +1,16 @@
+import { chromium } from 'playwright';
+import fs from 'node:fs';
+const b=await chromium.launch(); const p=await b.newPage({viewport:{width:1300,height:900}});
+const errs=[]; p.on('pageerror',e=>errs.push(e.message));
+await p.route('**/api/jobs', r=>r.fulfill({status:200, contentType:'application/json', body:fs.readFileSync('feed.json','utf8')}));
+await p.goto('http://localhost:4173/'); await p.waitForTimeout(1200); await p.screenshot({path:'home-hero2.png'});
+await p.getByRole('link',{name:'Jobs'}).first().click();
+await p.getByRole('heading',{name:'Remote marketing jobs'}).waitFor();
+await p.getByText('Performance Marketing Manager').waitFor(); console.log('PASS jobs listed');
+const href=await p.getByRole('link',{name:/Apply on Himalayas/}).first().getAttribute('href'); console.log('apply href '+href);
+const tgt=await p.getByRole('link',{name:/Apply on/}).first().getAttribute('target'); console.log('target '+tgt);
+await p.screenshot({path:'jobs.png'});
+await p.getByLabel('Search jobs').fill('content'); await p.waitForTimeout(300); console.log('after search: '+await p.locator('article.job-row').count());
+await p.setViewportSize({width:390,height:850}); await p.getByLabel('Search jobs').fill(''); await p.waitForTimeout(300); await p.screenshot({path:'jobs-mobile.png'});
+await p.goto('http://localhost:4173/'); await p.waitForTimeout(800); await p.screenshot({path:'home-mobile.png'});
+console.log('errors '+JSON.stringify(errs)); await b.close();
