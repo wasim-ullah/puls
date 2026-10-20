@@ -1,0 +1,34 @@
+import { chromium } from 'playwright';
+import fs from 'node:fs';
+const BASE = 'http://localhost:4173';
+const last = (e) => fs.readFileSync('links.log', 'utf8').trim().split('\n').filter((l) => l.startsWith(e + ' ')).at(-1).split(' ')[1];
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1300, height: 900 } });
+const p = await ctx.newPage();
+const errs = []; p.on('pageerror', (e) => errs.push(e.message)); const log = console.log;
+try {
+  await p.goto(BASE + '/'); await p.getByText("Show the results. Keep the client's name private.").waitFor(); log('PASS home band');
+  await p.screenshot({ path: 'home-conf.png', fullPage: true });
+  await p.goto(BASE + '/login?mode=signup');
+  await p.getByLabel('Choose a username').first().fill('zara'); await p.getByText('is available').first().waitFor();
+  await p.getByRole('button', { name: 'Claim it' }).first().click(); await p.getByLabel('Your email').fill('zara@example.com');
+  await p.getByRole('button', { name: 'Claim @zara' }).click(); await p.getByText('Check your inbox').waitFor();
+  await p.goto(last('zara@example.com')); await p.getByRole('heading', { name: 'My work' }).waitFor({ timeout: 10000 });
+  await p.goto(BASE + '/new');
+  await p.getByLabel('Title').fill('Cutting cost per sale for a telecom launch');
+  await p.getByLabel('Brand / client').fill('Etisalat');
+  await p.getByText('Keep the client confidential.').click();
+  await p.getByLabel(/Describe the client/).fill('A GCC telecom brand');
+  await p.getByRole('button', { name: '+ Add a result' }).click(); await p.getByLabel('Figure').fill('-38%'); await p.getByLabel('Metric').fill('Cost per sale');
+  await p.getByRole('button', { name: 'Publish' }).click(); await p.waitForURL(/\/@zara\//, { timeout: 15000 });
+  const html = await p.content(); log(html.includes('Etisalat') ? 'FAIL name shown publicly' : 'PASS name not on work page');
+  await p.getByText('A GCC telecom brand').first().waitFor(); await p.getByText('Name kept confidential').waitFor(); log('PASS descriptor shown');
+  await p.screenshot({ path: 'conf-work.png' });
+  await p.goto(BASE + '/dashboard'); await p.getByRole('link', { name: /Edit/ }).first().click();
+  await p.getByLabel(/Client name/).waitFor(); await p.waitForTimeout(1000);
+  log(((await p.getByLabel(/Client name/).inputValue()) === 'Etisalat' ? 'PASS' : 'FAIL') + ' owner sees real name in editor');
+  await p.goto(BASE + '/@zara'); await p.getByText('Confidential clients').waitFor(); log('PASS profile lists confidential count');
+  await p.goto(BASE + '/explore'); await p.waitForTimeout(1500);
+  log((await p.content()).includes('Etisalat') ? 'FAIL name on explore' : 'PASS name not on explore');
+} catch (e) { log('FAIL ' + e.message.split('\n')[0]); await p.screenshot({ path: 'conf-fail.png' }); }
+log('page errors ' + JSON.stringify(errs)); await b.close();

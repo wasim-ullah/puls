@@ -29,7 +29,7 @@ export default function Explore() {
     if (query) {
       // Strip characters that have meaning in PostgREST filter syntax.
       const safe = query.replace(/[%,()*\\]/g, ' ').slice(0, 60);
-      req = req.or(`title.ilike.%${safe}%,brand.ilike.%${safe}%,agency.ilike.%${safe}%`);
+      req = req.or(`title.ilike.%${safe}%,brand.ilike.%${safe}%,client_descriptor.ilike.%${safe}%,agency.ilike.%${safe}%`);
     }
     return req;
   }

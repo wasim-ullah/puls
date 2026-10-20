@@ -6,7 +6,7 @@ import { useAuth } from '../lib/auth';
 import { publicUrl } from '../lib/media';
 import { SITE_URL, supabase } from '../lib/supabase';
 import type { Category, Profile, WorkCard as WorkCardData } from '../lib/types';
-import { prettyHost, safeHref, useTitle, videoEmbed } from '../lib/util';
+import { clientLabel, prettyHost, safeHref, useTitle, videoEmbed } from '../lib/util';
 import NotFound from './NotFound';
 
 export default function WorkPage() {
@@ -57,7 +57,7 @@ export default function WorkPage() {
     ['Outcome', work.outcome],
   ].filter(([, v]) => v.trim());
   const details: [string, string][] = ([
-    ['Brand', work.brand],
+    [work.client_hidden ? 'Client' : 'Brand', clientLabel(work)],
     ['Agency / team', work.agency],
     ['My role', work.my_role],
     ['Category', category?.name || ''],
@@ -160,7 +160,7 @@ export default function WorkPage() {
           </article>
           <aside className="split-side">
             {details.length > 0 && (
-              <div className="side-card"><h2>Details</h2><dl>{details.map(([k, v]) => <div key={k} className="kv"><dt>{k}</dt><dd>{v}</dd></div>)}</dl></div>
+              <div className="side-card"><h2>Details</h2><dl>{details.map(([k, v]) => <div key={k} className="kv"><dt>{k}</dt><dd>{v}{k === 'Client' && <span className="small muted" style={{ display: 'block', fontWeight: 400 }}>Name kept confidential</span>}</dd></div>)}</dl></div>
             )}
             {credits.length > 0 && (
               <div className="side-card"><h2>Credits</h2><dl>{credits.map((c) => <div key={c.id ?? c.role + c.name} className="kv"><dt>{c.role}</dt><dd>{c.name}</dd></div>)}</dl></div>

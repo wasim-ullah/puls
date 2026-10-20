@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { publicUrl } from '../lib/media';
-import { initials } from '../lib/util';
+import { clientLabel, initials } from '../lib/util';
 import type { WorkCard as WorkCardData } from '../lib/types';
 
 /** Laud mark: a four-point spark, the "star" of praise. */
@@ -49,8 +49,8 @@ export function Loader() {
 export function WorkCard({ w, showOwner = true, tag }: { w: WorkCardData; showOwner?: boolean; tag?: string }) {
   const cover = publicUrl('work-media', w.cover_path);
   const sub = showOwner
-    ? [w.display_name || (w.username ? `@${w.username}` : ''), w.brand].filter(Boolean).join(' · ')
-    : [w.brand, w.category_name, w.year].filter(Boolean).join(' · ');
+    ? [w.display_name || (w.username ? `@${w.username}` : ''), clientLabel(w)].filter(Boolean).join(' · ')
+    : [clientLabel(w), w.category_name, w.year].filter(Boolean).join(' · ');
   return (
     <Link to={`/@${w.username}/${w.slug}`} className="work-card">
       <div className="work-thumb">

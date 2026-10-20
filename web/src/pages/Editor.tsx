@@ -20,12 +20,14 @@ interface Form {
   challenge: string; approach: string; outcome: string;
   cover_path: string; video_url: string; link_url: string;
   cover_style: CoverStyle; cover_color: string;
+  client_hidden: boolean; client_descriptor: string;
 }
 
 const EMPTY: Form = {
   title: '', slug: '', brand: '', agency: '', my_role: '', category_id: '', markets: '', year: '',
   summary: '', challenge: '', approach: '', outcome: '', cover_path: '', video_url: '', link_url: '',
   cover_style: 'stat', cover_color: '#111111',
+  client_hidden: false, client_descriptor: '',
 };
 
 function fromWork(w: Work): Form {
@@ -35,6 +37,7 @@ function fromWork(w: Work): Form {
     year: w.year ? String(w.year) : '', summary: w.summary, challenge: w.challenge, approach: w.approach,
     outcome: w.outcome, cover_path: w.cover_path, video_url: w.video_url, link_url: w.link_url,
     cover_style: (w.cover_style as CoverStyle) || 'stat', cover_color: w.cover_color || '#111111',
+    client_hidden: Boolean(w.client_hidden), client_descriptor: w.client_descriptor || '',
   };
 }
 
@@ -104,6 +107,11 @@ export default function Editor() {
     getWorkById(id!).then((full) => {
       if (!full || full.work.owner_id !== session.user.id) { setState('missing'); return; }
       setForm(fromWork(full.work));
+      if (full.work.client_hidden) {
+        // The real client name is private: only the owner can read it back.
+        void supabase.from('work_private').select('client_name').eq('work_id', full.work.id).maybeSingle()
+          .then(({ data }) => { if (data) setForm((f) => ({ ...f, brand: (data as { client_name: string }).client_name })); });
+      }
       setStatus(full.work.status);
       setAssets(full.assets);
       setResults(full.results);
@@ -184,7 +192,7 @@ export default function Editor() {
     setSaving(true);
     try {
       const file = await makeCoverFile({
-        title, brand: form.brand.trim(), value: headline?.value.trim() ?? '', metric: headline?.metric.trim() ?? '',
+        title, brand: form.client_hidden ? (form.client_descriptor.trim() || 'Confidential client') : form.brand.trim(), value: headline?.value.trim() ?? '', metric: headline?.metric.trim() ?? '',
         category: cats.find((c) => String(c.id) === String(form.category_id))?.name ?? '',
         style: form.cover_style, color: form.cover_color,
       });
@@ -193,13 +201,15 @@ export default function Editor() {
     } catch (err) { setSaving(false); setError(errorMessage(err)); return; }
 
     const payload = {
-      title: title.slice(0, 120), slug, brand: form.brand.trim().slice(0, 80), agency: form.agency.trim().slice(0, 80),
+      title: title.slice(0, 120), slug, brand: form.client_hidden ? '' : form.brand.trim().slice(0, 80), agency: form.agency.trim().slice(0, 80),
       my_role: form.my_role.trim().slice(0, 80), category_id: form.category_id ? Number(form.category_id) : null,
       markets: splitList(form.markets).slice(0, 10).map((m) => m.slice(0, 40)), year,
       summary: form.summary.trim().slice(0, 280), challenge: form.challenge.trim(), approach: form.approach.trim(),
       outcome: form.outcome.trim(), cover_path: coverPath, video_url: form.video_url.trim(), link_url: link,
       status: status === 'hidden' ? 'hidden' as const : nextStatus,
       cover_style: form.cover_style, cover_color: form.cover_color,
+      client_hidden: form.client_hidden,
+      client_descriptor: form.client_hidden ? form.client_descriptor.trim().slice(0, 80) : '',
     };
 
     try {
@@ -218,6 +228,13 @@ export default function Editor() {
       } else {
         const { error: err } = await supabase.from('works').update(payload).eq('id', workId!);
         if (err) throw err;
+      }
+
+      // Keep a confidential client's real name in the private table only.
+      if (form.client_hidden && form.brand.trim()) {
+        await supabase.from('work_private').upsert({ work_id: workId!, client_name: form.brand.trim().slice(0, 80), updated_at: new Date().toISOString() }).throwOnError();
+      } else {
+        await supabase.from('work_private').delete().eq('work_id', workId!).throwOnError();
       }
 
       // Replace child rows with what's on screen.
@@ -301,7 +318,16 @@ export default function Editor() {
                     <input value={form.slug} onChange={(e) => { setSlugTouched(true); set('slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')); }} maxLength={80} placeholder="souq-night-drop" />
                   </span>
                 </label>
-                <label className="field">Brand / client<input className="input" value={form.brand} onChange={(e) => set('brand', e.target.value)} maxLength={80} placeholder="Dune Coffee Co." /></label>
+                <label className="field">{form.client_hidden ? <>Client name <span className="hint">Private. Only you can see it.</span></> : 'Brand / client'}
+                  <input className="input" value={form.brand} onChange={(e) => set('brand', e.target.value)} maxLength={80} placeholder="Dune Coffee Co." /></label>
+                <label className="row gap-8 small" style={{ alignItems: 'flex-start', gridColumn: '1 / -1', cursor: 'pointer' }}>
+                  <input type="checkbox" checked={form.client_hidden} onChange={(e) => set('client_hidden', e.target.checked)} style={{ marginTop: 3 }} />
+                  <span><b>Keep the client confidential.</b> Show your results without the client's name. Visitors see your description instead, and the name is never published.</span>
+                </label>
+                {form.client_hidden && (
+                  <label className="field" style={{ gridColumn: '1 / -1' }}>Describe the client <span className="hint">Shown instead of the name. Keep it general enough that the client can't be identified.</span>
+                    <input className="input" value={form.client_descriptor} onChange={(e) => set('client_descriptor', e.target.value)} maxLength={80} placeholder="A GCC telecom brand" /></label>
+                )}
                 <label className="field">Agency or team<input className="input" value={form.agency} onChange={(e) => set('agency', e.target.value)} maxLength={80} placeholder="Northlane Studio, or In-house" /></label>
                 <label className="field">Your role<input className="input" value={form.my_role} onChange={(e) => set('my_role', e.target.value)} maxLength={80} placeholder="Performance lead" /></label>
                 <label className="field">Category
@@ -323,7 +349,7 @@ export default function Editor() {
               <div className="stack gap-8">
                 <span className="field" style={{ gap: 2 }}>Cover <span className="hint">Made automatically from your title and first result, so every cover on Laud matches. Pick a style and colour.</span></span>
                 <CoverMaker
-                  title={form.title} brand={form.brand}
+                  title={form.title} brand={form.client_hidden ? (form.client_descriptor.trim() || 'Confidential client') : form.brand}
                   category={cats.find((c) => String(c.id) === String(form.category_id))?.name ?? ''}
                   value={headline?.value ?? ''} metric={headline?.metric ?? ''}
                   style={form.cover_style} color={form.cover_color}

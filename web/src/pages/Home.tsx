@@ -87,6 +87,27 @@ export default function Home() {
       </section>
 
       <section className="wrap section">
+        <div className="confidential-band">
+          <div className="stack gap-16" style={{ flex: '1 1 460px' }}>
+            <span className="eyebrow" style={{ color: 'var(--accent)' }}>Confidential clients</span>
+            <h2 className="h-lg">Show the results. Keep the client's name private.</h2>
+            <p className="muted" style={{ fontSize: 16, maxWidth: 520 }}>
+              Your best numbers often belong to clients under NDA. Mark a piece of work as confidential, describe the client in your own words, and Laud never publishes the name.
+            </p>
+          </div>
+          <div className="confidential-card" aria-hidden="true">
+            <span className="mono small" style={{ opacity: 0.7 }}>CLIENT</span>
+            <div style={{ fontSize: 22, fontWeight: 600, letterSpacing: '-0.02em' }}>A GCC telecom brand</div>
+            <span className="small" style={{ opacity: 0.7 }}>Name kept confidential</span>
+            <div className="row gap-24" style={{ marginTop: 18 }}>
+              <div><div style={{ fontSize: 44, fontWeight: 800, letterSpacing: '-0.05em', color: 'var(--accent)' }}>−38%</div><span className="small" style={{ opacity: 0.7 }}>Cost per sale</span></div>
+              <div><div style={{ fontSize: 44, fontWeight: 800, letterSpacing: '-0.05em' }}>2.4x</div><span className="small" style={{ opacity: 0.7 }}>Return on ad spend</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="wrap section">
         <div className="section-head" style={{ alignItems: 'flex-end' }}>
           <div>
             <h2 className="h-md">Latest work</h2>

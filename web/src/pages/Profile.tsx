@@ -153,6 +153,9 @@ export default function Profile() {
                   {[...new Map(published.filter((w) => w.brand).map((w) => [w.brand.toLowerCase(), w])).values()].slice(0, 10).map((w) => (
                     <div key={w.id} className="kv"><dt style={{ color: 'var(--ink)' }}>{w.brand}</dt><dd className="small muted" style={{ fontWeight: 400 }}>{w.category_name || ''}</dd></div>
                   ))}
+                  {published.some((w) => w.client_hidden) && (
+                    <div className="kv"><dt style={{ color: 'var(--ink)' }}>Confidential clients</dt><dd className="small muted" style={{ fontWeight: 400 }}>{published.filter((w) => w.client_hidden).length} {published.filter((w) => w.client_hidden).length === 1 ? 'piece' : 'pieces'} of work</dd></div>
+                  )}
                 </dl>
               )}
             </div>

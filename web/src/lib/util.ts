@@ -112,3 +112,8 @@ export function errorMessage(e: unknown): string {
   if (e && typeof e === 'object' && 'message' in e) return String((e as { message: unknown }).message);
   return 'Something went wrong. Please try again.';
 }
+
+/** The client as visitors see it: the brand, or the owner's description when the client is confidential. */
+export function clientLabel(w: { brand: string; client_hidden?: boolean; client_descriptor?: string }): string {
+  return w.client_hidden ? (w.client_descriptor || 'Confidential client') : w.brand;
+}

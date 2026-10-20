@@ -258,3 +258,9 @@ dl { margin: 0; }
 .preview-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .preview-tiles > div { aspect-ratio: 3 / 4; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; font-size: 13px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
 .preview-tiles small { font-family: var(--mono); font-size: 9px; font-weight: 400; opacity: .75; letter-spacing: .03em; }
+
+/* Confidential clients band (home) */
+.confidential-band { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; justify-content: space-between; padding: 48px; border-radius: var(--radius); background: var(--ink); color: #F4F4F1; }
+.confidential-band .muted { color: rgba(244,244,241,.7); }
+.confidential-card { flex: 0 1 380px; display: flex; flex-direction: column; gap: 6px; padding: 28px; border-radius: 20px; background: #1C1C1C; border: 1px solid #2A2A2A; }
+@media (max-width: 640px) { .confidential-band { padding: 28px 20px; } }

@@ -43,6 +43,8 @@ export interface Work {
   approach: string;
   outcome: string;
   cover_path: string;
+  client_hidden?: boolean;
+  client_descriptor?: string;
   cover_style?: string;
   cover_color?: string;
   video_url: string;
@@ -82,6 +84,8 @@ export interface WorkCard {
   headline_metric: string | null;
   is_sample?: boolean;
   is_verified?: boolean;
+  client_hidden?: boolean;
+  client_descriptor?: string;
 }
 
 export type UsernameStatus = 'available' | 'taken' | 'reserved' | 'invalid';
