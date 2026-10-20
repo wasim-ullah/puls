@@ -6,21 +6,6 @@ import { supabase } from '../lib/supabase';
 import type { Category, WorkCard as WorkCardData } from '../lib/types';
 import { useTitle } from '../lib/util';
 
-function RotatingWord({ words }: { words: string[] }) {
-  const [i, setI] = useState(0);
-  const [leaving, setLeaving] = useState(false);
-  useEffect(() => {
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-    let swap: ReturnType<typeof setTimeout>;
-    const tick = setInterval(() => {
-      setLeaving(true);
-      swap = setTimeout(() => { setI((n) => (n + 1) % words.length); setLeaving(false); }, 320);
-    }, 2400);
-    return () => { clearInterval(tick); clearTimeout(swap); };
-  }, [words.length]);
-  return <span className={`rotating-word${leaving ? ' is-leaving' : ''}`}>{words[i]}</span>;
-}
-
 function HeroPhoto() {
   return (
     <div className="hero-photo">
@@ -46,10 +31,7 @@ export default function Home() {
         <div className="split" style={{ gap: 56, alignItems: 'stretch' }}>
           <div className="split-main stack gap-24" style={{ justifyContent: 'center' }}>
             <span className="pill pill-line" style={{ alignSelf: 'flex-start' }}><span className="dot" />Early access · usernames open</span>
-            <h1 className="display h-xl">
-              <span className="sr-only">The marketing portfolio that gives you visibility, trust and work.</span>
-              <span aria-hidden="true">The marketing portfolio <span className="grey">that gives you</span> <RotatingWord words={['visibility', 'trust', 'work']} />.</span>
-            </h1>
+            <h1 className="display h-xl">The marketing portfolio <span className="grey">to earn</span> credibility.</h1>
             <p style={{ fontSize: 18, color: 'var(--ink-2)', maxWidth: 560 }}>
               Show your campaigns and the results behind them on one link you own. Free for marketers.
             </p>

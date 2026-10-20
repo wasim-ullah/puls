@@ -287,8 +287,4 @@ dl { margin: 0; }
 .job-side { align-items: flex-end; flex: 0 0 auto; text-align: right; }
 @media (max-width: 640px) { .job-side { align-items: flex-start; text-align: left; width: 100%; } }
 
-/* Home headline: rotating last word */
-.rotating-word { display: inline-block; transition: opacity .32s ease, transform .32s ease; }
-.rotating-word.is-leaving { opacity: 0; transform: translateY(0.35em); }
-@media (prefers-reduced-motion: reduce) { .rotating-word { transition: none; } }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
